@@ -110,11 +110,6 @@
     <div id="incomeSummary" class="mono" style="font-size:13px;color:var(--ink-soft);margin:-8px 0 16px;"></div>
 
     <div class="card">
-      <h2>月別支出推移</h2>
-      <canvas id="chartMonthly"></canvas>
-    </div>
-
-    <div class="card">
       <h2>月別×カテゴリ別 内訳</h2>
       <canvas id="chartStacked"></canvas>
     </div>
@@ -598,16 +593,6 @@ function renderAll() {
   const expTotal = filtered.reduce((s,t) => s+t.amount, 0);
   document.getElementById('incomeSummary').textContent =
     `収入 ${yen(incTotal)} － 支出 ${yen(expTotal)} ＝ 収支 ${yen(incTotal - expTotal)}`;
-
-  // monthly trend
-  const monthlyTotals = {};
-  all.forEach(t => { const k = t.date.slice(0,7); monthlyTotals[k] = (monthlyTotals[k]||0)+t.amount; });
-  renderChart('chartMonthly', {
-    type: 'line',
-    data: { labels: months, datasets: [{ label: '支出', data: months.map(m => monthlyTotals[m]||0),
-      borderColor: '#2f4858', backgroundColor: '#2f4858', tension: .3 }] },
-    options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => (v/1000)+'k' } } } }
-  });
 
   // stacked month x category
   const catNames = categories.map(c => c.name);
